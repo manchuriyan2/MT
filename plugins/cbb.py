@@ -1,21 +1,18 @@
-#(©)Codexbotz
-
 from pyrogram import __version__
 from bot import Bot
-from config import OWNER_ID
-from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
+from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 
 @Bot.on_callback_query()
 async def cb_handler(client: Bot, query: CallbackQuery):
     data = query.data
     if data == "about":
         await query.message.edit_text(
-            text = f"○ 𝖢𝗋𝖾𝖺𝗍𝗈𝗋 : <a href='tg://user?id={OWNER_ID}'>𝖳𝗁𝗂𝗌 𝖯𝖾𝗋𝗌𝗈𝗇</a>\n○ 𝖫𝖺𝗇𝗀𝗎𝖺𝗀𝖾 : <code>𝖯𝖺𝗒𝗍𝗁𝗈𝗇 𝟥</code>\n○ 𝖲𝗈𝗎𝗋𝖼𝖾 𝖢𝗈𝖽𝖾 : <a href='tg://user?id={OWNER_ID}'>𝖯𝖺𝗂𝖽</a>\n○ 𝖢𝗁𝖺𝗇𝗇𝖾𝗅 : <a href='https://t.me/Vip_studios'>𝖵𝖨𝖯 𝖲𝗍𝗎𝖽𝗂𝗈𝗌</a>\n○ 𝖲𝗎𝗉𝗉𝗈𝗋𝗍 𝖦𝗋𝗈𝗎𝗉 : <a href='https://t.me/+UoOAfvRc8R0zNjg1'>𝖣𝗂𝗌𝖼𝗎𝗌𝗌𝗂𝗈𝗇 𝖢𝗁𝖺𝗍</a>",
+            text = f"<blockquote>Bot Developer: @StupidBoi69\nMore Bots: @jr_bots\n\n📞 To resolve any issues contact to bot developer 🍷🗿.</blockquote>",
             disable_web_page_preview = True,
             reply_markup = InlineKeyboardMarkup(
                 [
                     [
-                        InlineKeyboardButton("🔒 Close", callback_data = "close")
+                        InlineKeyboardButton("📴 Close", callback_data = "close")
                     ]
                 ]
             )
@@ -26,3 +23,18 @@ async def cb_handler(client: Bot, query: CallbackQuery):
             await query.message.reply_to_message.delete()
         except:
             pass
+    elif data == "buy_prem":
+        await query.message.edit_text(
+            text=f"<blockquote><b>⏺️ Hello {query.from_user.username}\n\n💰 Premium Membership Plans 💰\n\n↪️ ₹49 INR For 7 Days\n↪️ ₹149 INR For 1 Month\n↪️ ₹349 INR For 3 Months\n\n💳 UPI ID: nehasaini5103@okicici\n👛 QR Code - https://graph.org/file/fd1487021734ee86c78b4.jpg\n\nIf payment is not getting sent on above given QR code then inform admin, he will give you new QR code\n\nMust Send Screenshot after payment</b></blockquote>",
+            disable_web_page_preview=True,
+            reply_markup = InlineKeyboardMarkup(
+                [   
+                    [
+                        InlineKeyboardButton("💳 Send Payment Screenshot", url=f"https://t.me/StupidBoi69")
+                    ],
+                    [
+                        InlineKeyboardButton("📴 Close", callback_data = "close")
+                    ]
+                ]
+            )
+        )            
