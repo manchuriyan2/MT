@@ -6,7 +6,7 @@ from pyrogram.types import ChatJoinRequest, InlineKeyboardButton, InlineKeyboard
 from config import ADMINS, FORCE_MSG
 from database.database import fsub, req_db
 from bot import Bot
-from helpers_func import is_subscribed, is_requested
+from helper_func import is_subscribed, is_requested
 
 @Bot.on_message(filters.command('start') & filters.private)
 async def not_joined(client: Client, message: Message):
