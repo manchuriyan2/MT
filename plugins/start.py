@@ -13,7 +13,7 @@ from helper_func import *
 from database.database import *
 from plugins.forcesub import *
 
-SECONDS = TIME 
+SECONDS = TIME
 PROTECT_CONTENT = False
 
 WAIT_MSG = """<b>Processing ...</b>"""
@@ -25,21 +25,24 @@ async def start_command(client: Client, message: Message):
     if not await present_user(id):
         try:
             await add_user(id)
-        except:
-            pass
-
+        except Exception as e:
+            print(f"Error adding user: {e}")
+    
     if USE_SHORTLINK:
         if id not in ADMINS:
-            verify_status = await get_verify_status(id)
-            if verify_status['is_verified'] and VERIFY_EXPIRE < (time.time() - verify_status['verified_time']):
-                await update_verify_status(id, is_verified=False)
-            if "verify_" in message.text:
-                _, token = message.text.split("_", 1)
-                if verify_status['verify_token'] != token:
-                    return await message.reply("<blockquote><b>🔴 Your token verification is invalid or Expired, Hit /start command and try again<b></blockquote>")
-                await update_verify_status(id, is_verified=True, verified_time=time.time())
-                reply_markup = None if verify_status["link"] == "" else None
-                await message.reply(f"<blockquote><b>Hooray 🎉, your token verification is successful\n\n Now you can access all files for 24-hrs...</b></blockquote>", reply_markup=reply_markup, protect_content=False, quote=True)
+            try:
+                verify_status = await get_verify_status(id)
+                if verify_status['is_verified'] and VERIFY_EXPIRE < (time.time() - verify_status['verified_time']):
+                    await update_verify_status(id, is_verified=False)
+                if "verify_" in message.text:
+                    _, token = message.text.split("_", 1)
+                    if verify_status['verify_token'] != token:
+                        return await message.reply("<blockquote><b>🔴 Your token verification is invalid or expired, hit /start command and try again<b></blockquote>")
+                    await update_verify_status(id, is_verified=True, verified_time=time.time())
+                    reply_markup = None if verify_status["link"] == "" else None
+                    await message.reply(f"<blockquote><b>Hooray 🎉, your token verification is successful\n\n Now you can access all files for 24-hrs...</b></blockquote>", reply_markup=reply_markup, protect_content=False, quote=True)
+            except Exception as e:
+                print(f"Error verifying user: {e}")
 
     if len(message.text) > 7:
         if USE_SHORTLINK and id not in ADMINS:
@@ -47,8 +50,10 @@ async def start_command(client: Client, message: Message):
                 verify_status = await get_verify_status(id)
                 if not verify_status['is_verified']:
                     return
-            except:
+            except Exception as e:
+                print(f"Error checking verification status: {e}")
                 return
+        
         try:
             base64_string = message.text.split(" ", 1)[1]
             _string = await decode(base64_string)
@@ -59,6 +64,7 @@ async def start_command(client: Client, message: Message):
                 ids = range(min(start, end), max(start, end) + 1)
             elif len(argument) == 2:
                 ids = [int(argument[1])]
+            
             temp_msg = await message.reply("Please wait... 🫷")
             messages = await get_messages(client, ids)
             await temp_msg.delete()
@@ -74,26 +80,31 @@ async def start_command(client: Client, message: Message):
                     await asyncio.sleep(e.x)
                     snt_msg = await msg.copy(chat_id=message.from_user.id, caption=caption, parse_mode=ParseMode.HTML, reply_markup=reply_markup, protect_content=PROTECT_CONTENT)
                     snt_msgs.append(snt_msg)
+                except Exception as e:
+                    print(f"Error copying message: {e}")
+            
             notification_msg = await message.reply(f"<blockquote><b>🔴 This file will be deleted in {SECONDS // 60} minutes. Please save or forward it to your saved messages before it gets deleted.</b></blockquote>")
             await asyncio.sleep(SECONDS)
             for snt_msg in snt_msgs:
                 try:
                     await snt_msg.delete()
-                except:
-                    pass
+                except Exception as e:
+                    print(f"Error deleting message: {e}")
             await notification_msg.edit(f"<blockquote><b>🗑️ Hey @{message.from_user.username} your file has been successfully deleted!</b></blockquote>")
             return
     if USE_SHORTLINK:
         if id in ADMINS:
             return
-        verify_status = await get_verify_status(id)
-        if not verify_status['is_verified']:
-            token = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
-            await update_verify_status(id, verify_token=token, link="")
-            link = await get_shortlink(SHORTLINK_API_URL, SHORTLINK_API_KEY, f'https://t.me/{client.username}?start=verify_{token}')
-            btn = [[InlineKeyboardButton("↪️ Get free access for 24-hrs ↩️", url=link)], [InlineKeyboardButton('🦋 Tutorial', url=TUT_VID)]] + ([[InlineKeyboardButton("💰 Purchase premium membership", callback_data="buy_prem")]] if USE_PAYMENT else [])
-            await message.reply(f"<blockquote><b>ℹ️ Hi @{message.from_user.username}\nYour verification is expired, click on below button and complete the verification to\n <u>Get free access for 24-hrs</u></b></blockquote>", reply_markup=InlineKeyboardMarkup(btn), protect_content=False, quote=True)
-            return
+        try:
+            verify_status = await get_verify_status(id)
+            if not verify_status['is_verified']:
+                token = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
+                await update_verify_status(id, verify_token=token, link="")
+                link = await get_shortlink(SHORTLINK_API_URL, SHORTLINK_API_KEY, f'https://t.me/{client.username}?start=verify_{token}')
+                btn = [[InlineKeyboardButton("↪️ Get free access for 24-hrs ↩️", url=link)], [InlineKeyboardButton('🦋 Tutorial', url=TUT_VID)]] + ([[InlineKeyboardButton("💰 Purchase premium membership", callback_data="buy_prem")]] if USE_PAYMENT else [])
+                await message.reply(f"<blockquote><b>ℹ️ Hi @{message.from_user.username}\nYour verification is expired, click on below button and complete the verification to\n <u>Get free access for 24-hrs</u></b></blockquote>", reply_markup=InlineKeyboardMarkup(btn), protect_content=False, quote=True)
+        except Exception as e:
+            print(f"Error handling shortlink: {e}")
 
 @Bot.on_message(filters.command('start') & filters.private)
 async def not_joined(client: Client, message: Message):
@@ -131,6 +142,7 @@ async def not_joined(client: Client, message: Message):
         button_rows.append([InlineKeyboardButton(text='Try Again', url=f"https://t.me/{client.username}?start={message.command[1]}")])
     if not button_rows:
         button_rows = [[InlineKeyboardButton(text='Try Again', url=f"https://t.me/{client.username}")]]
+    
     try:
         await message.reply(
             text=FORCE_MSG.format(
@@ -147,7 +159,6 @@ async def not_joined(client: Client, message: Message):
     except Exception as e:
         print(f"Error sending reply: {e}")
         await message.reply("An error occurred while sending the message. Please try again later.")
-
      
 @Bot.on_message(filters.command('users') & filters.private & filters.user(ADMINS))
 async def get_users(client: Bot, message: Message):
