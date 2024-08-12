@@ -25,7 +25,7 @@ WAIT_MSG = """<b>Processing ...</b>"""
 REPLY_ERROR = """<blockquote><b>Use this command as a replay to any telegram message without any spaces.</b></blockquote>"""
 
 
-@Bot.on_message(filters.command('start') & filters.private & subscribed & subscribed2)
+@Bot.on_message(filters.command('start') & filters.private & subscribed & requested)
 async def start_command(client: Client, message: Message):
     id = message.from_user.id
     if not await present_user(id):
@@ -218,11 +218,21 @@ async def send_text(client: Bot, message: Message):
 
             # Update status every 10 users
             if total % 10 == 0:
-                status = f"""<b>Broadcast Status</b>\n\nTotal Users: <code>{total}</code>\nSuccessful: <code>{successful}</code>\nBlocked Users: <code>{blocked}</code>\nDeleted Accounts: <code>{deleted}</code>\nUnsuccessful: <code>{unsuccessful}</code>"""
+                status = f"""<blockquote><b>Broadcast Status
+Total Users: {total}
+Successful: <code>{successful}
+Blocked Users: <code>{blocked}
+Deleted Accounts: <code>{deleted}
+Unsuccessful: {unsuccessful}</b></blockquote>"""
                 await status_msg.edit(status)
         
         # Final status update
-        status = f"""<b>Broadcast Completed</b>\n\nTotal Users: <code>{total}</code>\nSuccessful: <code>{successful}</code>\nBlocked Users: <code>{blocked}</code>\nDeleted Accounts: <code>{deleted}</code>\nUnsuccessful: <code>{unsuccessful}</code>"""
+        status = f"""<blockquote><b>Broadcast Completed
+Total Users: {total}
+Successful: <code>{successful}
+Blocked Users: <code>{blocked}
+Deleted Accounts: <code>{deleted}
+Unsuccessful: {unsuccessful}</b></blockquote>"""        
         await pls_wait.edit(status)
         await status_msg.delete()
 
