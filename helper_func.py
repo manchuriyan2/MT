@@ -12,8 +12,6 @@ from shortzy import Shortzy
 from datetime import datetime
 from database.database import user_data, db_verify_status, db_update_verify_status, fsub, req_db  # Importing from database.py
 
-subscribed = filters.create(is_subscribed)
-requested = filters.create(is_requested)
 
 async def is_subscribed(filter, client, update):
     bot_id = client.me.id
@@ -177,3 +175,5 @@ async def increasepremtime(user_id : int, timeforprem : int):
         realtime = 3600
             
     await update_verify_status(user_id, is_verified=True, verified_time=time.time()-realtime)
+subscribed = filters.create(is_subscribed)
+requested = filters.create(is_requested)
