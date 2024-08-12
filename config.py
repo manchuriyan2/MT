@@ -12,8 +12,8 @@ CHANNEL_ID = int(os.environ.get("CHANNEL_ID", "-1001929558021"))
 OWNER_ID = int(os.environ.get("OWNER_ID", "1895952308"))
 PORT = os.environ.get("PORT", "8080")
 
-DB_URI = os.environ.get("DATABASE_URL", "mongodb+srv://skiliggeeXporter:skiliggeeXporter@cluster0.tdxtakc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
-DB_NAME = os.environ.get("DATABASE_NAME", "AdultElixir")
+DATABASE_URL = os.environ.get("DATABASE_URL", "mongodb+srv://skiliggeeXporter:skiliggeeXporter@cluster0.tdxtakc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+DATABASE_NAME = os.environ.get("DATABASE_NAME", "AdultElixir")
 
 DELAY = int(10 * 60)
 
