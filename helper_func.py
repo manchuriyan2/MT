@@ -1,10 +1,16 @@
+import base64
+import re
+import requests
+import time
+import asyncio
 from pyrogram import filters
 from pyrogram.enums import ChatMemberStatus
 from config import *
 from pyrogram.errors.exceptions.bad_request_400 import UserNotParticipant
 from pyrogram.errors import FloodWait
 from shortzy import Shortzy
-from database import user_data, db_verify_status, db_update_verify_status, fsub, req_db  # Importing from database.py
+from datetime import datetime
+from database.database import user_data, db_verify_status, db_update_verify_status, fsub, req_db  # Importing from database.py
 
 async def is_subscribed(filter, client, update):
     bot_id = client.me.id
@@ -41,7 +47,6 @@ async def is_requested(filter, client, update):
     
     # Since we're dealing with join requests, we don't need to check member status
     return True
-
 
 async def encode(string):
     string_bytes = string.encode("ascii")
@@ -87,7 +92,7 @@ async def get_message_id(client, message):
     elif message.forward_sender_name:
         return 0
     elif message.text:
-        pattern = "https://t.me/(?:c/)?(.*)/(\d+)"
+        pattern = "https://t.me/(?:c/)?(.*)/(\\d+)"
         matches = re.match(pattern,message.text)
         if not matches:
             return 0
@@ -101,6 +106,33 @@ async def get_message_id(client, message):
                 return msg_id
     else:
         return 0
+
+async def get_verify_status(user_id):
+    verify = await db_verify_status(user_id)
+    return verify
+
+async def update_verify_status(user_id, verify_token="", is_verified=False, verified_time=0, link=""):
+    current = await db_verify_status(user_id)
+    current['verify_token'] = verify_token
+    current['is_verified'] = is_verified
+    current['verified_time'] = verified_time
+    current['link'] = link
+    await db_update_verify_status(user_id, current)
+
+
+async def get_shortlink(url, api, link):
+    shortzy = Shortzy(api_key=api, base_site=url)
+    link = await shortzy.convert(link)
+    return link
+
+def get_exp_time(seconds):
+    periods = [('days', 86400), ('hours', 3600), ('mins', 60), ('secs', 1)]
+    result = ''
+    for period_name, period_seconds in periods:
+        if seconds >= period_seconds:
+            period_value, seconds = divmod(seconds, period_seconds)
+            result += f'{int(period_value)}{period_name}'
+    return result
 
 
 def get_readable_time(seconds: int) -> str:
@@ -124,5 +156,22 @@ def get_readable_time(seconds: int) -> str:
     up_time += ":".join(time_list)
     return up_time
 
-
-subscribed = filters.create(is_subscribed)
+async def increasepremtime(user_id : int, timeforprem : int):
+    if timeforprem == 0: 
+        realtime = 0
+    elif timeforprem == 1:
+        realtime = 86400*7
+    elif timeforprem == 2:
+        realtime = 86400*31
+    elif timeforprem == 3:
+        realtime == 86400*31*3
+    elif timeforprem == 4:
+        realtime == 86400*31*6
+    elif timeforprem == 5:
+        realtime == 86400*31*12
+    elif timeforprem == 6:
+        realtime = 300
+    elif timeforprem == 7:
+        realtime = 3600
+            
+    await update_verify_status(user_id, is_verified=True, verified_time=time.time()-realtime)
