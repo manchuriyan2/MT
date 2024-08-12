@@ -1,8 +1,20 @@
+#git+https://github.com/Mayuri-Chan/pyrofork
+
 # --- For-Bot-Working --------- #
-git+https://github.com/Mayuri-Chan/pyrofork
+pyrofork
 TgCrypto
+pyromod
 # --- For-Database ------------ #
 pymongo
+motor
+umongo
+marshmallow
 dnspython
 # --- For-Web-Response ------- #
+pytz
+requests
+bs4
+shortzy
 aiohttp
+aiofiles
+asyncio
