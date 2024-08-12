@@ -8,7 +8,7 @@ from logging.handlers import RotatingFileHandler
 TG_BOT_TOKEN = os.environ.get("TG_BOT_TOKEN", "6737569405:AAElc-yXDWUVE23FPUYUk2Eb7MEfDd9xfD0")
 APP_ID = int(os.environ.get("APP_ID", "25695562"))
 API_HASH = os.environ.get("API_HASH", "0b691c3e86603a7e34aae0b5927d725a")
-CHANNEL_ID = int(os.environ.get("CHANNEL_ID", "-1001929558021")
+CHANNEL_ID = int(os.environ.get("CHANNEL_ID", "-1001929558021"))
 OWNER_ID = int(os.environ.get("OWNER_ID", "1895952308"))
 PORT = os.environ.get("PORT", "8080")
 
@@ -18,7 +18,7 @@ DB_NAME = os.environ.get("DATABASE_NAME", "AdultElixir")
 DELAY = int(10 * 60)
 
 TG_BOT_WORKERS = int(os.environ.get("TG_BOT_WORKERS", "4"))
-START_MSG = os.environ.get("START_MESSAGE", "<blockquote><b>ℹ️ Hello {mention} Welcome to our 18+ Contact Provider Bot. Exclusively work for <a href='https://t.me/Adult_Elixir'>Elixir of Life</a></b></blockquote>")
+START_MSG = os.environ.get("START_MESSAGE", "<blockquote><b>ℹ️ Hello {mention} Welcome to our 18+ Contact Provider Bot. Exclusively work for <a href='https://t.me/Adult_Elixir'>Elixir of Lust</a></b></blockquote>")
 FORCE_MSG = os.environ.get("FORCE_SUB_MESSAGE", "<blockquote><b>ℹ️ Hello {mention}\nYou need to join in my Channel to use me\nKindly Please join Channel</b></blockquote>")
 
 CUSTOM_CAPTION = os.environ.get("CUSTOM_CAPTION", None)
