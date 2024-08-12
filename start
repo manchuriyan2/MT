@@ -1,3 +1,13 @@
+#!/bin/bash
+
+# Navigate to the application directory
+cd /app
+
+# Pull the latest code from the repository
 git pull
+
+# Install the required Python packages
 pip install --quiet -r requirements.txt
+
+# Run the main application
 python3 main.py
