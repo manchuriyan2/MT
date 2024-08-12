@@ -13,18 +13,16 @@ async def not_joined(client: Client, message: Message):
     buttons = []
     
     bot_id = client.me.id
-    fsub_entry = fsub.find_one({"_id": bot_id})
-    req_db_entry = req_db.find_one({"_id": bot_id})
+    try:
+        fsub_entry = await fsub.find_one({"_id": bot_id})
+        req_db_entry = await req_db.find_one({"_id": bot_id})
+    except Exception as e:
+        print(f"Error fetching from database: {e}")
+        await message.reply("An error occurred while accessing the database.")
+        return
 
-    if not fsub_entry or "channel_ids" not in fsub_entry:
-        fsub_channels = []
-    else:
-        fsub_channels = fsub_entry["channel_ids"]
-
-    if not req_db_entry or "channel_ids" not in req_db_entry:
-        req_db_channels = []
-    else:
-        req_db_channels = req_db_entry["channel_ids"]
+    fsub_channels = fsub_entry.get("channel_ids", []) if fsub_entry else []
+    req_db_channels = req_db_entry.get("channel_ids", []) if req_db_entry else []
     
     # Iterate through each force subscription channel
     for idx, force_sub_channel in enumerate(fsub_channels, start=1):
@@ -32,7 +30,7 @@ async def not_joined(client: Client, message: Message):
             invite_link = await client.create_chat_invite_link(chat_id=force_sub_channel)
             buttons.append(
                 InlineKeyboardButton(
-                    f"Join Channel {idx}",
+                    f"📯 Join Channel {idx}",
                     url=invite_link.invite_link
                 )
             )
@@ -45,7 +43,7 @@ async def not_joined(client: Client, message: Message):
             invite_link = await client.create_chat_invite_link(chat_id=request_channel, creates_join_request=True)
             buttons.append(
                 InlineKeyboardButton(
-                    f"Request Channel {idx}",
+                    f"🪆 Request Channel {idx}",
                     url=invite_link.invite_link
                 )
             )
@@ -59,7 +57,7 @@ async def not_joined(client: Client, message: Message):
         button_rows.append(
             [
                 InlineKeyboardButton(
-                    text='Try Again',
+                    text='🔃 Try Again',
                     url=f"https://t.me/{client.username}?start={message.command[1]}"
                 )
             ]
