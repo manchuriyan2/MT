@@ -1,5 +1,3 @@
-#git+https://github.com/Mayuri-Chan/pyrofork
-
 # --- For-Bot-Working --------- #
 pyrofork
 TgCrypto
