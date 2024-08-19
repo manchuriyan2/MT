@@ -3,7 +3,7 @@ import logging
 from operator import add
 from logging.handlers import RotatingFileHandler
 
-TG_BOT_TOKEN = os.environ.get("TG_BOT_TOKEN", "6737569405:AAElc-yXDWUVE23FPUYUk2Eb7MEfDd9xfD0")
+TG_BOT_TOKEN = os.environ.get("TG_BOT_TOKEN", "6737569405:AAH7tH0Hrax_8M-8SiN2s4UzD--SLS1Mdxc")
 APP_ID = int(os.environ.get("APP_ID", "25695562"))
 API_HASH = os.environ.get("API_HASH", "0b691c3e86603a7e34aae0b5927d725a")
 CHANNEL_ID = int(os.environ.get("CHANNEL_ID", "-1001929558021"))
@@ -15,10 +15,10 @@ DATABASE_NAME = os.environ.get("DATABASE_NAME", "AdultElixir")
 
 TIME = int(os.environ.get("TIME", "3600"))
 USE_SHORTLINK = True if os.environ.get('USE_SHORTLINK', "TRUE") == "TRUE" else False 
-SHORTLINK_API_URL = os.environ.get("SHORTLINK_API_URL", "runurl.in")
-SHORTLINK_API_KEY = os.environ.get("SHORTLINK_API_KEY", "3a2c084d61d0813b05a00cd9ba564e92e39f92cb")
-VERIFY_EXPIRE = int(os.environ.get('VERIFY_EXPIRE', "43200")) # Add time in seconds
-TUT_VID = os.environ.get("TUT_VID","https://t.me/Anime_Elixir/8")
+SHORTLINK_API_URL = os.environ.get("SHORTLINK_API_URL", "modijiurl.com")
+SHORTLINK_API_KEY = os.environ.get("SHORTLINK_API_KEY", "1f37e24233e5b28fc9dba3b11f6a2be6277ca186")
+VERIFY_EXPIRE = int(os.environ.get('VERIFY_EXPIRE', "86400")) # Add time in seconds
+TUT_VID = os.environ.get("TUT_VID","https://t.me/Anime_Elixir/12")
 USE_PAYMENT = True if (os.environ.get("USE_PAYMENT", "TRUE") == "TRUE") & (USE_SHORTLINK) else False
 
 
